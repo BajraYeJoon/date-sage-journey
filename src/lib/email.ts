@@ -1,6 +1,4 @@
-import { Resend } from "resend";
-
-const resend = new Resend(import.meta.env.VITE_RESEND_API_KEY);
+import nodemailer from 'nodemailer';
 
 interface EmailDetails {
   mood: string;
@@ -14,6 +12,14 @@ interface SendEmailProps {
   subject: string;
   details: EmailDetails;
 }
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: import.meta.env.VITE_GMAIL_USER,
+    pass: import.meta.env.VITE_GMAIL_APP_PASSWORD,
+  },
+});
 
 export const sendEmail = async ({ to, subject, details }: SendEmailProps) => {
   const [dateStr, timeStr] = details.dateTime.split("|");
@@ -50,8 +56,8 @@ export const sendEmail = async ({ to, subject, details }: SendEmailProps) => {
   `;
 
   try {
-    await resend.emails.send({
-      from: "Date Scheduler <onboarding@resend.dev>",
+    await transporter.sendMail({
+      from: import.meta.env.VITE_GMAIL_USER,
       to,
       subject,
       html,

@@ -7,8 +7,8 @@ import Index from "./pages/Index";
 import Mood from "./pages/Mood";
 import Activity from "./pages/Activity";
 import Food from "./pages/Food";
-import Calendar from "./pages/Calendar";
 import Preview from "./pages/Preview";
+import CalendarComp from "./pages/Calendar";
 
 const queryClient = new QueryClient();
 
@@ -24,7 +24,7 @@ const App = () => (
             <Route path="/mood" element={<Mood />} />
             <Route path="/activity" element={<Activity />} />
             <Route path="/food" element={<Food />} />
-            <Route path="/calendar" element={<Calendar />} />
+            <Route path="/calendar" element={<CalendarComp />} />
             <Route path="/preview" element={<Preview />} />
           </Routes>
         </BrowserRouter>

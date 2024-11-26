@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { sendEmail } from "@/lib/email";
+import { sendEmail } from "@/lib/email-service";
 
 interface DateDetails {
   mood: string;
@@ -43,16 +43,17 @@ const Preview = () => {
 
     setIsLoading(true);
     try {
-      await sendEmail({
-        to: [email, partnerEmail],
-        subject: "Your Date is Confirmed! 🎉",
-        details: details!,
-      });
-      toast.success("Date details sent successfully!");
-      localStorage.clear();
-      navigate("/");
+      const success = await sendEmail(email, partnerEmail, details!);
+
+      if (success) {
+        toast.success("Date details sent successfully!");
+        localStorage.clear();
+        navigate("/");
+      } else {
+        toast.error("Failed to send email. Please try again.");
+      }
     } catch (error) {
-      toast.error("Failed to send email. Please try again.");
+      toast.error("An unexpected error occurred.");
     } finally {
       setIsLoading(false);
     }
@@ -68,7 +69,9 @@ const Preview = () => {
       <div className="max-w-4xl w-full space-y-8">
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold">Preview Your Date</h1>
-          <p className="text-muted-foreground">Review and confirm your selections</p>
+          <p className="text-muted-foreground">
+            Review and confirm your selections
+          </p>
         </div>
 
         <Card>
